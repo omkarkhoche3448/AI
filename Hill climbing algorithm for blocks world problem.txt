@@ -1,0 +1,121 @@
+import copy
+
+# List to store visited states during the search
+visited_states = []
+
+# Heuristic function to estimate the distance from the goal state
+def heuristic(curr_state, goal_state):
+    goal_ = goal_state[3]
+    val = 0
+    for i in range(len(curr_state)):
+        check_val = curr_state[i]
+        if len(check_val) > 0:
+            for j in range(len(check_val)):
+                if check_val[j] != goal_[j]:
+                    val = val - j
+                else:
+                    val = val + j
+    return val
+
+# Function to generate next states from the current state
+def generate_next(curr_state, prev_heu, goal_state):
+    global visited_states
+    state = copy.deepcopy(curr_state)
+    for i in range(len(state)):
+        temp = copy.deepcopy(state)
+        if len(temp[i]) > 0:
+            elem = temp[i].pop()
+            for j in range(len(temp)):
+                temp1 = copy.deepcopy(temp)
+                if j != i:
+                    temp1[j] = temp1[j] + [elem]
+                    if temp1 not in visited_states:
+                        curr_heu = heuristic(temp1, goal_state)
+                        if curr_heu > prev_heu:
+                            child = copy.deepcopy(temp1)
+                            return child
+    return 0
+
+# Function to find a solution to the blocks world problem
+def solution_(init_state, goal_state):
+    global visited_states
+    if init_state == goal_state:
+        print(goal_state)
+        print("Solution found!")
+        return
+    current_state = copy.deepcopy(init_state)
+    while True:
+        visited_states.append(copy.deepcopy(current_state))
+        print(current_state)
+        prev_heu = heuristic(current_state, goal_state)
+        child = generate_next(current_state, prev_heu, goal_state)
+        if child == 0:
+            print("Final state - ", current_state)
+            return
+        current_state = copy.deepcopy(child)
+
+# Main function to call the solver
+def solver():
+    global visited_states
+    init_state = [[], [], [], ['B', 'C', 'D', 'A']]
+    goal_state = [[], [], [], ['A', 'B', 'C', 'D']]
+    solution_(init_state, goal_state)
+
+# Call the solver function to find the solution
+solver()
+
+
+Expaliantion:
+Sure, let's dive into a detailed explanation of the code:
+
+1. Imports:
+   - `import copy`: This imports the `copy` module, which is used to create deep copies of objects, particularly lists in this case.
+
+2. Global Variables:
+   - `visited_states`: This is a list that will be used to keep track of visited states during the search process. It's defined outside the functions so it can be accessed and modified globally.
+
+3. Heuristic Function (`heuristic`):
+   - This function calculates the heuristic value for a given state compared to the goal state.
+   - It takes two parameters: `curr_state`, which represents the current state, and `goal_state`, which represents the desired goal state.
+   - Inside the function:
+     - It initializes `goal_` with the last list (which represents the final peg) of the `goal_state`. 
+     - It then iterates over each peg in the `curr_state`.
+     - For each peg, it iterates over the blocks in that peg and compares their positions with the corresponding positions in the goal peg (`goal_`). 
+     - Based on the comparison, it calculates a heuristic value (`val`), which is incremented or decremented based on the position of the blocks relative to their position in the goal state.
+   - Finally, it returns the calculated heuristic value (`val`).
+
+4. Generate Next States Function (`generate_next`):
+   - This function generates the next possible states from the current state.
+   - It takes three parameters: `curr_state` (the current state), `prev_heu` (the heuristic value of the current state), and `goal_state` (the desired goal state).
+   - Inside the function:
+     - It makes a deep copy of the `curr_state` to avoid modifying the original state.
+     - It then iterates over each peg in the current state.
+     - For each peg, it pops a block (`elem`) from the top of the peg and creates a new state by placing this block onto each of the other pegs (except the one it was removed from).
+     - If the resulting state has not been visited before (`temp1 not in visited_states`), it calculates the heuristic value (`curr_heu`) of this state using the `heuristic` function.
+     - If the calculated heuristic value (`curr_heu`) is greater than the previous heuristic value (`prev_heu`), it means this state is closer to the goal state. In this case, it returns this state as the next state.
+   - If no better state is found, it returns `0` indicating that no improvement is possible.
+
+5. Solution Finding Function (`solution_`):
+   - This function attempts to find a solution to the blocks world problem using hill climbing.
+   - It takes two parameters: `init_state` (the initial state) and `goal_state` (the desired goal state).
+   - Inside the function:
+     - It first checks if the initial state is already the goal state. If it is, the function prints the goal state and a message indicating that the solution is found, then returns.
+     - It initializes `current_state` with a deep copy of the initial state.
+     - It enters a loop that continues until a final state is reached or no better move is possible:
+       - It appends the current state to the list of visited states.
+       - It prints the current state.
+       - It calculates the heuristic value (`prev_heu`) of the current state using the `heuristic` function.
+       - It generates the next state using the `generate_next` function.
+       - If the next state is `0`, it means no better move is possible, so it prints the final state and returns.
+       - Otherwise, it updates the `current_state` with the next state.
+
+6. Solver Function:
+   - This function acts as an entry point for the solver.
+   - It doesn't take any parameters.
+   - Inside the function, it initializes the initial and goal states and calls the `solution_` function with these states to start the search for a solution.
+
+7. Main Function Call:
+   - This is where the script starts executing.
+   - It calls the `solver` function to initiate the search for a solution to the blocks world problem.
+
+This code implements the hill climbing algorithm to solve the blocks world problem, and it's properly indented and structured for clarity and readability. Let me know if you need further clarification!

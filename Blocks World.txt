@@ -1,0 +1,32 @@
+Sure, let's break down the code step by step:
+
+### Classes:
+1. PREDICATE: This class serves as a base class for representing predicates in the Block World problem. Predicates are conditions or statements about the state of blocks in the world. This class provides methods for string representation (`__str__`), representation (`__repr__`), equality comparison (`__eq__`), and hashing (`__hash__`). Additionally, it contains a method `get_action` to retrieve the action associated with the predicate in a given world state.
+
+2. Operation: Similar to the `PREDICATE` class, this class serves as a base class for representing operations in the Block World problem. It provides methods for string representation (`__str__`), representation (`__repr__`), equality comparison (`__eq__`), and specific methods like `precondition`, `delete`, and `add` to define the preconditions, delete list, and add list of the operation.
+
+3. ON, ONTABLE, CLEAR, HOLDING, ARMEMPTY: These are subclasses of `PREDICATE` representing specific predicates relevant to the Block World problem. For example, `ON` represents that one block is on top of another, `ONTABLE` represents that a block is on the table, `CLEAR` represents that a block has nothing on top of it, `HOLDING` represents that the arm is holding a block, and `ARMEMPTY` represents that the arm is empty.
+
+4. StackOp, UnstackOp, PickupOp, PutdownOp: These are subclasses of `Operation` representing specific operations relevant to the Block World problem. For example, `StackOp` represents stacking one block onto another, `UnstackOp` represents unstacking one block from another, `PickupOp` represents picking up a block, and `PutdownOp` represents putting down a block.
+
+### Functions:
+1. isPredicate(obj): This function checks if an object is an instance of any predicate class.
+
+2. isOperation(obj): This function checks if an object is an instance of any operation class.
+
+3. arm_status(world_state): This function returns the status of the arm (whether it's empty or holding a block) based on the given world state.
+
+### GoalStackPlanner Class:
+1. \_\_init\_\_: Initializes the planner with the initial state and the goal state.
+
+2. get_steps(): This method implements the goal stack planning algorithm to find the sequence of steps needed to achieve the goal state from the initial state.
+
+### Main Block:
+1. Initial State and Goal State: Define the initial state and the goal state for the Block World problem.
+
+2. Goal Stack Planning: Create a `GoalStackPlanner` object with the initial and goal states. Then, call the `get_steps` method to retrieve the sequence of steps needed to achieve the goal state.
+
+3. Print Steps: Finally, print the sequence of steps obtained from the goal stack planner.
+
+### Summary:
+The code implements a goal stack planner for solving the Block World problem. It defines classes to represent predicates and operations, and provides methods to manipulate them based on the current state of the world. The goal stack planner uses a stack-based approach to achieve the goal state by decomposing the goal into subgoals and executing actions to satisfy them. Finally, it returns the sequence of actions needed to achieve the goal state from the initial state.

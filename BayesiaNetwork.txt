@@ -1,0 +1,175 @@
+!pip install pgmpy
+from pgmpy.models import BayesianModel
+from pgmpy.factors.discrete import TabularCPD
+
+# Define the structure of the Bayesian Network
+model = BayesianModel([('e', 'm'), ('i', 'm'), ('i', 's'), ('m', 'a')])
+
+'''
+                    Student
+                      |
+                      v
+exam ---> marks <--- IQ
+           |
+           v
+      admission
+'''
+
+# Define Conditional Probability Distributions (CPDs)
+
+cpd_e = TabularCPD(variable='e', variable_card=2, values=[[0.6], [0.4]])
+cpd_i = TabularCPD(variable='i', variable_card=2, values=[[0.7], [0.3]])
+cpd_m = TabularCPD(variable='m', variable_card=2,
+                   evidence=['e', 'i'],
+                   values=[[0.9, 0.6, 0.7, 0.1],
+                           [0.1, 0.4, 0.3, 0.9]],
+                   evidence_card=[2, 2])
+cpd_s = TabularCPD(variable='s', variable_card=2,
+                   evidence=['i'],
+                   values=[[0.95, 0.2],
+                           [0.05, 0.8]],
+                   evidence_card=[2])
+cpd_a = TabularCPD(variable='a', variable_card=2,
+                   evidence=['m'],
+                   values=[[0.8, 0.1],
+                           [0.2, 0.9]],
+                   evidence_card=[2])
+
+# Add CPDs to the model
+model.add_cpds(cpd_e, cpd_i, cpd_m, cpd_s, cpd_a)
+
+# Check if the model is consistent
+print("Model is consistent:", model.check_model())
+
+# Print CPDs
+for cpd in model.get_cpds():
+    print("CPD for {}: \n{}".format(cpd.variable, cpd))
+
+# Doing exact inference using Variable Elimination
+from pgmpy.inference import VariableElimination
+
+infer = VariableElimination(model)
+
+# Calculate the probability of admission given marks=1
+print("\nProbability of admission given marks=1:")
+print(infer.query(variables=['a'], evidence={'m': 1}).values[1])
+
+# Calculate the probability of marks given exam=0 and IQ=1
+print("\nProbability of marks given exam=0 and IQ=1:")
+print(infer.query(variables=['m'], evidence={'e': 0, 'i': 1}).values)
+
+
+
+
+
+'''
+
+Certainly! Let me explain each line of the code to you:
+
+
+from pgmpy.models import BayesianModel
+from pgmpy.factors.discrete import TabularCPD
+Here, we import the necessary classes from the pgmpy library. BayesianModel is used to define the structure of the Bayesian Network, and TabularCPD is used to define Conditional Probability Distributions (CPDs).
+
+
+model = BayesianModel([('e', 'm'), ('i', 'm'), ('i', 's'), ('m', 'a')])
+This line defines the structure of the Bayesian Network. Each tuple in the list represents a directed edge in the network. So, ('e', 'm') indicates a directed edge from node 'e' to node 'm', and so on.
+
+
+cpd_e = TabularCPD(variable='e', variable_card=2, values=[[0.6], [0.4]])
+This line defines the Conditional Probability Distribution (CPD) for the variable 'e', which represents the exam level. It specifies that there are two possible values for 'e' (variable_card=2), and the probabilities of these values are given as values=[[0.6], [0.4]].
+
+
+cpd_i = TabularCPD(variable='i', variable_card=2, values=[[0.7], [0.3]])
+Similar to the previous line, this defines the CPD for the variable 'i', which represents the IQ level.
+
+
+cpd_m = TabularCPD(variable='m', variable_card=2,
+                   evidence=['e', 'i'],
+                   values=[[0.9, 0.6, 0.7, 0.1],
+                           [0.1, 0.4, 0.3, 0.9]],
+                   evidence_card=[2, 2])
+This line defines the CPD for the variable 'm', which represents the marks. It specifies that 'm' depends on both 'e' and 'i' (as indicated by evidence=['e', 'i']). The values attribute specifies the probabilities of 'm' given different combinations of values for 'e' and 'i'.
+
+
+cpd_s = TabularCPD(variable='s', variable_card=2,
+                   evidence=['i'],
+                   values=[[0.95, 0.2],
+                           [0.05, 0.8]],
+                   evidence_card=[2])
+This line defines the CPD for the variable 's', which represents the aptitude score. It specifies that 's' depends on 'i' only.
+
+
+cpd_a = TabularCPD(variable='a', variable_card=2,
+                   evidence=['m'],
+                   values=[[0.8, 0.1],
+                           [0.2, 0.9]],
+                   evidence_card=[2])
+This line defines the CPD for the variable 'a', which represents the admission. It specifies that 'a' depends on 'm' (marks).
+
+
+model.add_cpds(cpd_e, cpd_i, cpd_m, cpd_s, cpd_a)
+Here, we add all the defined CPDs to the Bayesian Network model.
+
+
+print("Model is consistent:", model.check_model())
+This line checks if the model is consistent, meaning if all the CPDs are properly defined and the model structure is valid.
+
+
+for cpd in model.get_cpds():
+    print("CPD for {}: \n{}".format(cpd.variable, cpd))
+This loop prints out all the CPDs defined in the model.
+
+
+infer = VariableElimination(model)
+This line initializes the Variable Elimination algorithm for inference on the Bayesian Network model.
+
+
+print("\nProbability of admission given marks=1:")
+print(infer.query(variables=['a'], evidence={'m': 1}).values[1])
+Here, we perform inference to calculate the probability of admission given marks=1 using the Variable Elimination algorithm and print the result.
+
+
+print("\nProbability of marks given exam=0 and IQ=1:")
+print(infer.query(variables=['m'], evidence={'e': 0, 'i': 1}).values)
+Similarly, this line calculates the probability of marks given exam=0 and IQ=1 and prints the result.
+
+
+
+'''
+
+Other code 
+
+class BayesianNetwork:
+    def __init__(self, cpt_a, cpt_m_given_ie, cpt_i, cpt_e):
+        self.cpt_a = cpt_a
+        self.cpt_m_given_ie = cpt_m_given_ie
+        self.cpt_i = cpt_i
+        self.cpt_e = cpt_e
+
+    def joint_probability(self, a, m, i, e):
+        return self.cpt_a[a] * self.cpt_m_given_ie[m][i][e] * self.cpt_i[i] * self.cpt_e[e]
+
+cpt_a = {True: 0.7, False: 0.3}
+cpt_m_given_ie = {
+    100: {
+        90: {True: 0.2, False: 0.3},
+        80: {True: 0.1, False: 0.4}
+    },
+    90: {
+        90: {True: 0.1, False: 0.4},
+        80: {True: 0.3, False: 0.3}
+    }
+}
+cpt_i = {90: 0.6, 100: 0.4}
+cpt_e = {True: 0.5, False: 0.5}
+
+bayesian_network = BayesianNetwork(cpt_a, cpt_m_given_ie, cpt_i, cpt_e)
+joint_prob = bayesian_network.joint_probability(True, 100, 90, True)
+print("Joint Probability:", joint_prob)
+
+
+
+
+
+

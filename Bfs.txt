@@ -1,0 +1,103 @@
+
+
+class Graph:
+    def __init__(self):
+        self.graph = {}
+
+    def add_edge(self, node, neighbors):
+        self.graph[node] = neighbors
+
+    def print_graph(self):
+        for node, neighbors in self.graph.items():
+            print(f"{node}: {neighbors}")
+
+def best_first_search(graph, start, goal, heuristics):
+    visited = set()
+    path = []
+    queue = [(heuristics[start], start)]
+
+    while queue:
+        queue.sort()  # Sort the queue based on heuristic values
+        cost, current_node = queue.pop(0)
+
+        if current_node not in visited:
+            visited.add(current_node)
+            path.append(current_node)
+
+            if current_node == goal:
+                return path, cost
+
+            neighbors = graph.graph[current_node]
+
+            for neighbor in neighbors:
+                if neighbor not in visited:
+                    queue.append((heuristics[neighbor], neighbor))
+
+    return None, None
+
+
+
+# Create a graph
+my_graph = Graph()
+my_graph.add_edge('A', {'B', 'C'})
+my_graph.add_edge('B', {'A', 'D', 'E'})
+my_graph.add_edge('C', {'A', 'F', 'G'})
+my_graph.add_edge('D', {'B'})
+my_graph.add_edge('E', {'B', 'H'})
+my_graph.add_edge('F', {'C'})
+my_graph.add_edge('G', {'C', 'I'})
+my_graph.add_edge('H', {'E'})
+my_graph.add_edge('I', {'G'})
+
+# Assign heuristics
+heuristics = {'A': 10, 'B': 8, 'C': 5, 'D': 7, 'E': 3, 'F': 6, 'G': 4, 'H': 2, 'I': 0}
+
+# Print the graph
+my_graph.print_graph()
+
+# Perform Best-First Search
+start_node = 'A'
+goal_node = 'I'
+path_result, cost_result = best_first_search(my_graph, start_node, goal_node, heuristics)
+
+# Display the path and cost
+if path_result:
+    print(f"\nBest-First Search Path from {start_node} to {goal_node}: {path_result}")
+    # print(f"Total Cost: {cost_result}")           It is f(n) = h(n) so no path cost is there
+else:
+    print(f"\nNo path found from {start_node} to {goal_node}")
+
+
+
+explaination:
+
+Certainly! Let's go through the provided code, which implements the Best-First Search (BFS) algorithm, and explain it step by step.
+
+### `Graph` Class:
+1. `__init__`: Initializes an empty dictionary `self.graph` to represent the graph.
+2. `add_edge`: Adds an edge to the graph by taking a `node` and its `neighbors` as input and updates the `self.graph` dictionary accordingly.
+3. `print_graph`: Prints the nodes and their corresponding neighbors in the graph.
+
+### `best_first_search` Function:
+1. Inputs:
+   - `graph`: The graph object on which BFS is performed.
+   - `start`: The starting node for BFS.
+   - `goal`: The goal node that we want to reach.
+   - `heuristics`: A dictionary containing the heuristic values for each node.
+2. Algorithm:
+   - Initializes `visited` set to keep track of visited nodes, `path` list to store the path, and `queue` with tuples `(heuristic_value, node)` to prioritize nodes based on heuristic values.
+   - While the `queue` is not empty, it sorts the queue based on heuristic values and pops the node with the minimum heuristic value.
+   - If the current node is not visited, it adds it to the `visited` set and appends it to the `path`.
+   - If the current node is the goal node, it returns the path and its cost.
+   - Otherwise, it retrieves the neighbors of the current node from the graph and adds them to the queue along with their heuristic values.
+
+### Main Block:
+1. Creates an instance of the `Graph` class (`my_graph`).
+2. Adds edges to the graph using the `add_edge` method.
+3. Assigns heuristic values to each node.
+4. Prints the graph using the `print_graph` method.
+5. Performs the Best-First Search algorithm by providing the graph, start node, goal node, and heuristics to the `best_first_search` function.
+6. Prints the resulting path if found; otherwise, prints that no path is found.
+
+### Explanation:
+The code demonstrates how to perform Best-First Search on a graph using a priority queue based on heuristic values. The algorithm prioritizes exploring nodes that are closer to the goal based on the heuristic information provided. It starts from the initial node and explores its neighbors based on their heuristic values until it finds the goal node or exhausts all possibilities. The path found is then returned, or if no path is found, a corresponding message is displayed.

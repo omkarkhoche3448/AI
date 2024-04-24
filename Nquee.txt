@@ -1,0 +1,94 @@
+n =8
+N_Queens = []
+CheckBoard = []
+for i in range(n):
+    CheckBoard.append([0] * n)
+
+def is_safe(row, col):
+    if not is_column_safe(row, col):
+        return False
+    if not is_right_diagonal_safe(row, col):
+        return False
+    if not is_left_diagonal_safe(row, col):
+        return False
+    return True
+
+def is_column_safe(row, col):
+    for i in range(row):
+        if CheckBoard[i][col] == 1:
+            return False
+    return True
+
+def is_left_diagonal_safe(row, col):
+    i = row
+    j = col
+    while i >= 0 and j >= 0:
+        if CheckBoard[i][j] == 1:
+            return False
+        i -= 1
+        j -= 1
+    return True
+
+def is_right_diagonal_safe(row, col):
+    i = row
+    j = col
+    while i >= 0 and j < n:
+        if CheckBoard[i][j] == 1:
+            return False
+        i -= 1
+        j += 1
+    return True
+
+def backtrack():
+    if not N_Queens:
+        return
+    last_row, last_col = N_Queens.pop()
+    CheckBoard[last_row][last_col] = 0
+    PlaceQueen(last_row, last_col + 1)
+
+def PlaceQueen(row, col):
+    if row == n:
+        print("Solution found: ")
+        for row in CheckBoard:
+            print(row)
+        return
+    for j in range(col, n):
+        if is_safe(row, j):
+            CheckBoard[row][j] = 1
+            N_Queens.append((row, j))
+            PlaceQueen(row + 1, 0)
+            CheckBoard[row][j] = 0
+            N_Queens.pop()
+    backtrack()
+
+PlaceQueen(0, 0)
+
+
+
+Initialization:
+n: This variable represents the size of the chessboard and the number of queens to be placed. For instance, if n = 5, it means you're solving the 5-Queens problem, aiming to place 5 queens on a 5x5 chessboard.
+N_Queens: This list serves as a stack to keep track of the positions where queens are placed. It will help in backtracking when a dead-end is reached.
+CheckBoard: This 2D list represents the chessboard. Initially, it's filled with zeros, indicating that no queens are placed on the board.
+is_safe Function:
+This function checks whether it's safe to place a queen at a given position (row, col) on the chessboard.
+It ensures safety by checking three conditions: column, left diagonal, and right diagonal.
+Helper Functions:
+These functions aid in the safety check for placing a queen.
+is_column_safe(row, col): It checks whether there's any queen in the same column above the current position (row, col).
+is_left_diagonal_safe(row, col): It checks whether there's any queen in the left diagonal above the current position (row, col).
+is_right_diagonal_safe(row, col): It checks whether there's any queen in the right diagonal above the current position (row, col).
+These functions traverse upwards from the current position to check for existing queens.
+backtrack Function:
+This function is called when there's no possible position to place a queen in the current row, leading to a dead-end.
+It pops the last queen's position from the stack N_Queens, resets the corresponding cell in CheckBoard to 0, and continues the exploration from there.
+PlaceQueen Function:
+This function recursively tries to place queens on the chessboard.
+It starts from a given position (row, col) and continues placing queens in the next rows.
+If a safe position is found, the queen is placed, and the function is called recursively for the next row.
+If no safe position is found, it backtracks to the previous row to explore other possibilities.
+Execution:
+The PlaceQueen function is initially called with (0, 0) to start placing queens from the first row.
+It explores all possible configurations of queen placements using recursion and backtracking.
+Whenever a valid solution is found (i.e., all queens are placed without attacking each other), it prints the chessboard configuration representing that solution.
+Explanation:
+The code systematically explores the solution space of the N-Queens problem using backtracking.The algorithm terminates when all solutions are found or when all possible configurations are explored.

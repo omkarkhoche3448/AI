@@ -1,0 +1,84 @@
+# Initial values of Alpha and Beta
+MAX, MIN = -1000, 1000
+
+def minimax(depth, nodeIndex, maximizingPlayer, values, alpha, beta):
+    # Terminating condition. i.e leaf node is reached
+    if depth == 3:
+        return values[nodeIndex]
+
+    if maximizingPlayer:
+        best = MAX
+
+        # Recur for left and right children
+        for i in range(0, 2):
+            val = minimax(depth + 1, nodeIndex * 2 + i, False, values, alpha, beta)
+            best = max(best, val)
+            alpha = max(alpha, best)
+
+            # Alpha Beta Pruning
+            if beta <= alpha:
+                break
+        return best
+    else:
+        best = MIN
+        # Recur for left and right children
+        for i in range(0, 2):
+            val = minimax(depth + 1, nodeIndex * 2 + i, True, values, alpha, beta)
+            best = min(best, val)
+            beta = min(beta, best)
+
+            # Alpha Beta Pruning
+            if beta <= alpha:
+                break
+
+    return best
+
+if __name__ == "__main__":
+
+    values = [3, 5, 6, 9, 1, 2, 0,-1]
+    print("The optimal value is:", minimax(0, 0, True, values, MAX, MIN))
+
+
+
+#The optimal value is: 4
+
+
+Sure, let's explain the code step by step:
+
+1. Initialization:
+   - `MAX` and `MIN` are initialized with very large and very small values, respectively, to represent positive infinity and negative infinity.
+
+2. Minimax Function:
+   - `minimax(depth, nodeIndex, maximizingPlayer, values, alpha, beta)`: This function implements the Minimax algorithm with Alpha-Beta Pruning.
+   - It takes parameters:
+     - `depth`: The depth of the current node in the game tree.
+     - `nodeIndex`: The index of the current node in the game tree.
+     - `maximizingPlayer`: A boolean flag indicating whether it's the maximizing player's turn.
+     - `values`: A list of values associated with each node in the game tree.
+     - `alpha`: The best value that the maximizing player currently can guarantee at the current level or above.
+     - `beta`: The best value that the minimizing player currently can guarantee at the current level or above.
+   - The function returns the optimal value for the current node in the game tree.
+
+3. Terminating Condition:
+   - If the depth of the node is 3 (i.e., it's a leaf node), the function returns the value associated with that node.
+
+4. Maximizing Player's Turn:
+   - If it's the maximizing player's turn, the function initializes `best` with `-1000` (representing negative infinity).
+   - It iterates over the children nodes and recursively calls `minimax` for each child node.
+   - It updates `best` with the maximum of the current value and the value returned by the child node.
+   - It updates `alpha` with the maximum of `alpha` and `best`.
+   - It performs Alpha-Beta Pruning by checking if `beta` is less than or equal to `alpha`. If so, it breaks out of the loop.
+
+5. Minimizing Player's Turn:
+   - If it's the minimizing player's turn, the function initializes `best` with `1000` (representing positive infinity).
+   - It follows a similar process to the maximizing player's turn but updates `best` and `beta` accordingly.
+
+6. Function Call:
+   - In the main part of the code, a list `values` representing the values of each node in the game tree is provided.
+   - The `minimax` function is called with initial parameters, starting at depth 0, node index 0, and `maximizingPlayer` set to `True`.
+   - The optimal value returned by the Minimax algorithm is printed.
+
+7. Output:
+   - The code outputs the optimal value calculated by the Minimax algorithm with Alpha-Beta Pruning.
+
+This implementation of Minimax with Alpha-Beta Pruning efficiently prunes unnecessary branches of the game tree, leading to faster computation of the optimal value.
