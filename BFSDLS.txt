@@ -14,119 +14,87 @@
 
  
 graph = {
-  'A' : ['B','C'],
-  'B' : ['D', 'E'],
-  'C' : ['F'],
-  'D' : [],
-  'E' : [],
-  'F' : []
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': [],
+    'F': []
 }
- 
-visited = []  # List for visited nodes.
-queue = []	# Initialize a queue
- 
+
+visited = []  # List for visited nodes
+queue = []    # Initialize a queue
+
 def bfs(visited, graph, node):  # Function for BFS
-  visited.append(node)
-  queue.append(node)
- 
-  while queue:  # Creating a loop to visit each node
-	m = queue.pop(0)
-	print(m, end=" ")
- 
-	for neighbor in graph[m]:
-  	if neighbor not in visited:
-        visited.append(neighbor)
-    	queue.append(neighbor)
- 
+    visited.append(node)
+    queue.append(node)
+
+    while queue:  # Creating a loop to visit each node
+        m = queue.pop(0)
+        print(m, end=" ")
+
+        for neighbor in graph[m]:
+            if neighbor not in visited:
+                visited.append(neighbor)
+                queue.append(neighbor)
+
 start_node = 'A'
 print(f"Following is the Breadth-First Search starting from node '{start_node}':")
-bfs(visited, graph, start_node)  # Function calling
+bfs(visited, graph, start_node)  # Function call
 print("\nVisited nodes:", visited)
- 
- 
- 
-def dls(node, goal, depth_limit, graph):
-	visited = set()
-	return recursive_dls(visited, node, goal, depth_limit, graph)
- 
-def recursive_dls(visited, node, goal, depth_limit, graph):
-	if node == goal:
-    	return True
-	elif depth_limit == 0:
-    	return False
-	else:
-    	visited.add(node)
-    	if node in graph:
-        	for child in graph[node]:
-            	if child not in visited and recursive_dls(visited, child, goal, depth_limit - 1, graph):
-                	return True
-    	return False
- 
-graph = {
-	'A': ['B', 'C'],
-	'B': ['D', 'E'],
-	'C': ['F'],
-	'D': [],
-	'E': [],
-	'F': []
-}
- 
+
+def dls(node, goal, depth_limit, graph, current_depth=0):
+    visited = set()
+    return recursive_dls(visited, node, goal, depth_limit, graph, current_depth)
+
+def recursive_dls(visited, node, goal, depth_limit, graph, current_depth):
+    if node == goal:
+        return True
+    elif depth_limit == 0:
+        return False
+    else:
+        visited.add(node)
+        print(f"Visiting node {node} at depth {current_depth}")
+        if node in graph:
+            for child in graph[node]:
+                if child not in visited and recursive_dls(visited, child, goal, depth_limit - 1, graph, current_depth + 1):
+                    return True
+        return False
+
 start_node = 'A'
 goal_node = 'F'
-depth_limit = int(input("Enter the limit: "))
- 
+depth_limit = 5  # Set the depth limit here
+
+print(f"\nPerforming Depth-Limited Search from node '{start_node}' to node '{goal_node}' with depth limit {depth_limit}:")
 result = dls(start_node, goal_node, depth_limit, graph)
-print(result)
+print("Path exists:", result)
  
-# Output:
-# Following is the Breadth-First Search starting from node 'A':
-# A B C D E F
-# Visited nodes: ['A', 'B', 'C', 'D', 'E', 'F']
- 
-# Enter the limit: 5
-# True
 
 Let's break down the code step by step, explaining each part:
 
-### Breadth-First Search (BFS):
+Certainly! Let's break down the code and its functionality step by step:
 
-1. Graph Representation:
-   - The graph is represented using an adjacency list, where each node is associated with a list of its neighboring nodes.
+1. **Graph Representation**:
+   - The `graph` variable represents a graph using an adjacency list format. It's a dictionary where each key represents a node, and the corresponding value is a list of its neighboring nodes.
 
-2. Initialization:
-   - `visited`: A list to keep track of visited nodes.
-   - `queue`: Initialize an empty queue.
+2. **Breadth-First Search (BFS)**:
+   - The `bfs` function performs a Breadth-First Search traversal starting from a given node.
+   - It uses a queue to keep track of nodes to visit.
+   - The function starts from the specified start node, appends it to the `visited` list, and adds it to the `queue`.
+   - Then, it enters a loop where it dequeues a node from the `queue`, prints it, and adds its unvisited neighbors to the `queue` and `visited` list.
+   - This process continues until the `queue` is empty, meaning all reachable nodes have been visited.
 
-3. BFS Function:
-   - `bfs(visited, graph, node)`: This function implements the Breadth-First Search algorithm.
-     - It starts by appending the starting node to the `visited` list and the `queue`.
-     - Then, it enters a while loop to visit each node in the queue.
-     - It pops a node from the queue (`m`) and prints it.
-     - For each neighbor of the current node (`m`), if the neighbor has not been visited, it adds it to the `visited` list and the `queue`.
+3. **Depth-Limited Search (DLS)**:
+   - The `dls` function performs a Depth-Limited Search from a start node to a goal node with a specified depth limit.
+   - It uses recursion to explore the graph up to a certain depth.
+   - The function starts by calling the `recursive_dls` function with the initial parameters.
+   - The `recursive_dls` function recursively explores the graph, checking each node's children up to a certain depth limit.
+   - If the goal node is found within the depth limit, the function returns `True`; otherwise, it returns `False`.
+   - During the search, the function prints a message whenever it visits a node, along with its current depth level.
 
-4. Function Call:
-   - The BFS function is called with the starting node `'A'`.
-   - After the function call, it prints the visited nodes.
+4. **Main Execution**:
+   - The main part of the code sets the start node, goal node, and depth limit.
+   - It then calls the `dls` function to perform a Depth-Limited Search from the start node to the goal node with the specified depth limit.
+   - Finally, it prints whether a path exists from the start node to the goal node within the depth limit.
 
-### Depth-Limited Search (DLS):
-
-1. DLS Function:
-   - `dls(node, goal, depth_limit, graph)`: This function performs Depth-Limited Search.
-     - It initializes a set to keep track of visited nodes.
-     - It calls the `recursive_dls` function to recursively explore the graph until it finds the goal node or reaches the depth limit.
-
-2. Recursive DLS Function:
-   - `recursive_dls(visited, node, goal, depth_limit, graph)`: This function performs the actual recursive depth-limited search.
-     - If the current node is equal to the goal node, it returns `True`.
-     - If the depth limit is 0, it returns `False`.
-     - Otherwise, it marks the current node as visited and recursively explores its children if they haven't been visited and the depth limit hasn't been reached.
-
-3. Function Call:
-   - The DLS function is called with the starting node `'A'`, goal node `'F'`, and a depth limit obtained from user input.
-   - It prints the result (`True` if the goal node is reachable within the depth limit, otherwise `False`).
-
-### Output:
-- The BFS algorithm prints the nodes visited in breadth-first order.
-- The Depth-Limited Search algorithm prints whether the goal node is reachable within the specified depth limit.
-
-Let me know if you need further clarification on any part!
+This code demonstrates two graph traversal algorithms, BFS and DLS, and provides insight into how these algorithms explore a graph to find paths between nodes.
