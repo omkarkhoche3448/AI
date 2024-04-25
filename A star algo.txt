@@ -133,22 +133,44 @@ Cost = 6
 
 Explaination:
 
+Sure, let's break down the code and understand how it works:
 
-Node Class:
-The Node class represents a node in the graph. Each node has attributes f, g, h, and name.
-f: Total cost of the node (g + h), where g is the cost from the start node to the current node, and h is the heuristic estimate from the current node to the goal node.
-g: Cost from the start node to the current node.
-h: Heuristic estimate from the current node to the goal node.
-name: Identifier for the node.
+1. Node Class:
+   - The `Node` class represents a node in the graph used for the A* algorithm.
+   - Each node has attributes `f`, `g`, `h`, and `name`.
+     - `f` is the total estimated cost of the path through the node.
+     - `g` is the cost from the start node to the current node.
+     - `h` is the heuristic cost from the current node to the goal node.
+     - `name` is the identifier for the node.
+   - The `setNeighbours` method sets the neighbors of the node.
 
-Graph Representation:
-The graph is represented as a list of lists (graph). Each inner list represents the costs between nodes. -1 indicates no connection between nodes.
+2. Graph Representation:
+   - The `graph` variable represents the adjacency matrix of the graph.
+   - Each cell `graph[i][j]` contains the cost of the edge between nodes `i` and `j`.
+   - If there is no edge between two nodes, the value is `-1`.
 
-Heuristic Values:
-A list heuristics contains heuristic values for each node in the graph.
+3. Heuristics:
+   - The `heuristics` list contains heuristic values for each node in the graph.
+   - These heuristic values are estimates of the cost from each node to the goal node.
 
-Setting Neighbors:
-Neighbors for each node are set using the setNeighbours method.
+4. Setting Up Nodes and Neighbors:
+   - Nodes `s`, `a`, `b`, `c`, `d`, and `g` are created and initialized with heuristic values and names.
+   - Neighbors are set for each node according to the provided graph.
+
+5. A* Algorithm:
+   - The `astar` function implements the A* algorithm to find the shortest path from the start node to the goal node.
+   - It maintains two sets: `openSet` and `closedSet`. `openSet` contains nodes that need to be evaluated, while `closedSet` contains nodes that have already been evaluated.
+   - It initializes the start node's `g` and `f` values and adds it to the `openSet`.
+   - It iterates until the `openSet` is empty.
+   - At each iteration, it selects the node with the lowest `f` score from the `openSet` and evaluates its neighbors.
+   - If a better path to a neighbor is found, it updates its `g` and `f` values and adds it to the `openSet`.
+   - If the goal node is reached, it reconstructs the path using the `cameFrom` dictionary and returns it.
+
+6. Path Reconstruction and Output:
+   - The `contruct_path` function reconstructs the path from the `cameFrom` dictionary.
+   - In the `__main__` section, the `astar` function is called with the start and goal nodes, and the resulting path is printed along with its cost.
+
+This code demonstrates the A* algorithm for finding the shortest path in a graph efficiently by considering both the actual cost from the start node and the heuristic cost to the goal node.
 
 A Algorithm* (astar function):
 The A* algorithm finds the shortest path from the start node to the goal node.
@@ -162,6 +184,3 @@ The algorithm terminates when it reaches the goal node or when the openSet is em
 Constructing Path (contruct_path function):
 This function constructs the path from the start node to the goal node using the cameFrom dictionary, which stores the parent node for each node in the path.
 
-Printing the Path:
-In the __main__ section, the astar function is called to find the shortest path from the start node to the goal node.
-The resulting path is printed along with the cost of reaching the goal node
