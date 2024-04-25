@@ -64,31 +64,35 @@ def PlaceQueen(row, col):
 PlaceQueen(0, 0)
 
 
+Sure, here's a tailored explanation based on your code:
 
-Initialization:
-n: This variable represents the size of the chessboard and the number of queens to be placed. For instance, if n = 5, it means you're solving the 5-Queens problem, aiming to place 5 queens on a 5x5 chessboard.
-N_Queens: This list serves as a stack to keep track of the positions where queens are placed. It will help in backtracking when a dead-end is reached.
-CheckBoard: This 2D list represents the chessboard. Initially, it's filled with zeros, indicating that no queens are placed on the board.
-is_safe Function:
-This function checks whether it's safe to place a queen at a given position (row, col) on the chessboard.
-It ensures safety by checking three conditions: column, left diagonal, and right diagonal.
-Helper Functions:
-These functions aid in the safety check for placing a queen.
-is_column_safe(row, col): It checks whether there's any queen in the same column above the current position (row, col).
-is_left_diagonal_safe(row, col): It checks whether there's any queen in the left diagonal above the current position (row, col).
-is_right_diagonal_safe(row, col): It checks whether there's any queen in the right diagonal above the current position (row, col).
-These functions traverse upwards from the current position to check for existing queens.
-backtrack Function:
-This function is called when there's no possible position to place a queen in the current row, leading to a dead-end.
-It pops the last queen's position from the stack N_Queens, resets the corresponding cell in CheckBoard to 0, and continues the exploration from there.
-PlaceQueen Function:
-This function recursively tries to place queens on the chessboard.
-It starts from a given position (row, col) and continues placing queens in the next rows.
-If a safe position is found, the queen is placed, and the function is called recursively for the next row.
-If no safe position is found, it backtracks to the previous row to explore other possibilities.
-Execution:
-The PlaceQueen function is initially called with (0, 0) to start placing queens from the first row.
-It explores all possible configurations of queen placements using recursion and backtracking.
-Whenever a valid solution is found (i.e., all queens are placed without attacking each other), it prints the chessboard configuration representing that solution.
-Explanation:
-The code systematically explores the solution space of the N-Queens problem using backtracking.The algorithm terminates when all solutions are found or when all possible configurations are explored.
+1. Initialization:
+   - `n`: This variable signifies the size of the chessboard and the number of queens to be placed. For instance, if `n = 8`, you're solving the 8-Queens problem on an 8x8 chessboard.
+   - `N_Queens`: This list acts as a stack to track the positions where queens are placed. It facilitates backtracking when a dead-end is reached.
+   - `CheckBoard`: This 2D list represents the chessboard. Initially, it's filled with zeros, indicating no queen placement.
+
+2. is_safe Function:
+   - Checks if it's safe to place a queen at a given position `(row, col)` by examining three aspects: column, left diagonal, and right diagonal.
+
+3. Helper Functions:
+   - `is_column_safe(row, col)`: Verifies if there's any queen in the same column above the current position `(row, col)`.
+   - `is_left_diagonal_safe(row, col)`: Validates if there's any queen in the left diagonal above the current position `(row, col)`.
+   - `is_right_diagonal_safe(row, col)`: Validates if there's any queen in the right diagonal above the current position `(row, col)`.
+
+4. backtrack Function:
+   - Called when no feasible position is found to place a queen in the current row, prompting a backtrack.
+   - Pops the last queen's position from `N_Queens`, resets the corresponding cell in `CheckBoard` to 0, and resumes exploration.
+
+5. PlaceQueen Function:
+   - Recursively places queens on the chessboard, starting from a given position `(row, col)` and progressing to the next rows.
+   - If a safe position is identified, the queen is placed, and the function is called recursively for the subsequent row.
+   - If no safe position is found, it backtracks to the preceding row to explore alternative placements.
+
+6. Execution:
+   - Initiates the `PlaceQueen` function with `(0, 0)` to commence queen placement from the first row.
+   - Explores potential queen configurations using recursion and backtracking.
+   - Upon discovering a valid solution (i.e., all queens are placed without threat), it displays the chessboard configuration representing that solution.
+
+7. Explanation:
+   - This algorithm systematically navigates the solution space of the N-Queens problem, employing recursion and backtracking to prune invalid configurations.
+   - It terminates upon finding all solutions or exhausting all possible configurations, ensuring a thorough exploration of the problem space.
