@@ -64,6 +64,24 @@ def solver():
 # Call the solver function to find the solution
 solver()
 
+o/p:
+[['A', 'B', 'C', 'D'], [], [], []]: This represents the final state of the pegs after the solution is found. It shows that all blocks (A, B, C, D) are stacked in order on the first peg, while the other three pegs are empty.
+Explanation:
+Initially, the blocks are stacked on the fourth peg in reverse order: ['B', 'C', 'D', 'A'].
+The goal state is to have all blocks stacked in order on the first peg: ['A', 'B', 'C', 'D'].
+The output shows each step of the hill climbing algorithm's progress towards reaching the goal state.
+At each step, it prints the current state of the pegs.
+The algorithm gradually moves blocks from one peg to another, aiming to improve the heuristic value (closeness to the goal state) at each step.
+Eventually, it reaches a state where all blocks are correctly stacked on the first peg, which satisfies the goal state condition.
+Let's go through each step of the output:
+
+[['A'], [], [], ['B', 'C', 'D']]: Moves block A from the fourth peg to the first peg.
+[['A', 'D'], [], [], ['B', 'C']]: Moves block D from the fourth peg to the second peg.
+[['A'], ['D'], [], ['B', 'C']]: Moves block A from the first peg to the second peg.
+[['A'], ['D'], ['C'], ['B']]: Moves block C from the fourth peg to the third peg.
+[['A', 'B'], ['D'], ['C'], []]: Moves block B from the fourth peg to the third peg.
+[['A', 'B', 'C'], ['D'], [], []]: Moves block C from the third peg to the second peg.
+[['A', 'B', 'C', 'D'], [], [], []]: Moves block D from the second peg to the first peg.
 
 Expaliantion:
 Sure, let's dive into a detailed explanation of the code:
