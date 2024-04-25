@@ -1,0 +1,131 @@
+
+import heapq
+
+def find_position(value, grid):
+    for i, row in enumerate(grid):
+        for j, tile in enumerate(row):
+            if tile == value:
+                return i, j
+
+def manhattan_distance(state, goal_state):
+    distance = 0
+    for i in range(3):
+        for j in range(3):
+            if state[i][j] != 'X':
+                goal_row, goal_col = find_position(state[i][j], goal_state)
+                distance += abs(i - goal_row) + abs(j - goal_col)
+    return distance
+
+def print_configuration(matrix):
+    for row in matrix:
+        print(row)
+    print()
+
+def generate_successors(state):
+    successors = []
+    blank_row, blank_col = next((i, j) for i, row in enumerate(state) for j, tile in enumerate(row) if tile == 'X')
+
+    for i, j in [(blank_row - 1, blank_col), (blank_row, blank_col - 1), (blank_row, blank_col + 1), (blank_row + 1, blank_col)]:
+        if 0 <= i < 3 and 0 <= j < 3:
+            successor = [row.copy() for row in state]
+            successor[blank_row][blank_col], successor[i][j] = successor[i][j], successor[blank_row][blank_col]
+            successors.append(successor)
+
+    return successors
+
+def a_star(initial_state, goal_state):
+    if initial_state == goal_state:
+        return 0  # Already at the goal state
+
+    open_list = [(manhattan_distance(initial_state, goal_state), 0, initial_state)]
+    closed_set = set()
+
+    while open_list:
+        _, cost, current_state = heapq.heappop(open_list)
+
+        if current_state == goal_state:
+            return cost
+
+        if tuple(map(tuple, current_state)) in closed_set:
+            continue
+
+        closed_set.add(tuple(map(tuple, current_state)))
+
+        print(f"Step {cost}:")
+        print_configuration(current_state)
+
+        for successor in generate_successors(current_state):
+            if tuple(map(tuple, successor)) not in closed_set:
+                heapq.heappush(open_list, (cost + 1 + manhattan_distance(successor, goal_state), cost + 1, successor))
+
+    return -1  # If no solution is found
+
+# Example usage:
+initial_configuration = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 'X']
+]
+
+goal_configuration = [
+    ['X', 2, 3],
+    [1, 4, 6],
+    [7, 5, 8]
+]
+
+result = a_star(initial_configuration, goal_configuration)
+
+if result != -1:
+    print(f"Solution found in {result} steps.")
+else:
+    print("No solution found.")
+
+
+
+
+### 1. Importing Libraries:
+import heapq
+- This line imports the `heapq` module, which provides heap-based priority queues.
+
+### 2. Helper Functions:
+
+#### `find_position(value, grid)`:
+- This function finds the row and column indices of a given value in a 2D grid.
+
+#### `manhattan_distance(state, goal_state)`:
+- This function calculates the Manhattan distance heuristic between two states. 
+- It sums the absolute differences in row and column indices for each tile, except for the blank tile ('X').
+
+#### `print_configuration(matrix)`:
+- This function prints a 2D matrix configuration.
+
+#### `generate_successors(state)`:
+- This function generates the successor states (configurations) by moving the blank tile ('X') in four possible directions (up, down, left, right).
+- It returns a list of successor states.
+
+### 3. A* Algorithm:
+
+#### `a_star(initial_state, goal_state)`:
+- This function implements the A* search algorithm to find the shortest path from the initial state to the goal state.
+- It takes the initial state and the goal state as input.
+- It initializes the open list as a priority queue with the initial state's heuristic value, cost, and state.
+- It initializes an empty set `closed_set` to keep track of visited states.
+- It enters a loop until the open list is empty.
+- Within the loop:
+  - It pops the state with the lowest total estimated cost (f-value) from the open list.
+  - If the current state is the goal state, it returns the cost.
+  - If the current state is not in the closed set:
+    - It adds the current state to the closed set.
+    - It prints the current state's configuration.
+    - It generates successor states and adds them to the open list if they are not in the closed set.
+- If no solution is found, it returns -1.
+
+### 4. Example Usage:
+
+- It defines an initial and a goal configuration of a 3x3 puzzle.
+- It calls the `a_star` function with the initial and goal configurations.
+- If a solution is found, it prints the number of steps required. Otherwise, it prints "No solution found."
+
+### Example Output:
+
+The output of the program will show each step of the A* algorithm, printing the configuration of the puzzle at each step until the goal state is reached. If a solution is found, it will also display the number of steps required. Otherwise, it will indicate that no solution was found.
