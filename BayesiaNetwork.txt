@@ -61,7 +61,44 @@ print(infer.query(variables=['m'], evidence={'e': 0, 'i': 1}).values)
 
 
 
+Sure, let's break down the provided code step by step and explain each part in detail:
 
+1. Installation of `pgmpy`:
+   - The first line `!pip install pgmpy` is a command used in Jupyter notebooks to install packages from PyPI (Python Package Index).
+   - It installs the `pgmpy` library, which stands for Probabilistic Graphical Models in Python.
+
+2. Importing Libraries:
+   - `from pgmpy.models import BayesianModel`: This line imports the `BayesianModel` class from the `pgmpy.models` module. BayesianModel is used to define Bayesian networks.
+   - `from pgmpy.factors.discrete import TabularCPD`: This line imports the `TabularCPD` class from the `pgmpy.factors.discrete` module. TabularCPD is used to define Conditional Probability Distributions (CPDs).
+
+3. Defining the Bayesian Network Structure:
+   - `model = BayesianModel([('e', 'm'), ('i', 'm'), ('i', 's'), ('m', 'a')])`: This line defines the structure of the Bayesian Network using the BayesianModel class. It specifies the relationships between variables using directed edges. In this network, 'e' (exam) influences 'm' (marks), 'i' (IQ) influences 'm' and 's' (student status), and 'm' influences 'a' (admission).
+
+4. Defining Conditional Probability Distributions (CPDs):
+   - Conditional Probability Distributions (CPDs) are defined for each node in the Bayesian Network.
+   - For example, `cpd_e` defines the CPD for the variable 'e' (exam), `cpd_i` for 'i' (IQ), `cpd_m` for 'm' (marks), `cpd_s` for 's' (student status), and `cpd_a` for 'a' (admission).
+   - The values for the CPDs are specified based on domain knowledge or data. These values represent the conditional probabilities of each variable given its parents.
+
+5. Adding CPDs to the Model:
+   - `model.add_cpds(cpd_e, cpd_i, cpd_m, cpd_s, cpd_a)`: This line adds the defined CPDs to the Bayesian Network model.
+
+6. Model Consistency Check:
+   - `model.check_model()`: This method checks if the model is consistent, i.e., if the CPDs are correctly specified and satisfy the model structure.
+
+7. Printing CPDs:
+   - `model.get_cpds()`: This method retrieves all CPDs from the model.
+   - The loop prints each CPD along with its variable and associated probabilities.
+
+8. Exact Inference Using Variable Elimination:
+   - `from pgmpy.inference import VariableElimination`: This line imports the `VariableElimination` class from the `pgmpy.inference` module. VariableElimination is used for exact inference in Bayesian Networks.
+   - `infer = VariableElimination(model)`: This line creates a VariableElimination object with the defined Bayesian Network model.
+
+9. Querying Probabilities:
+   - `infer.query()`: This method is used to query the Bayesian Network for probabilities given evidence.
+   - For example, `infer.query(variables=['a'], evidence={'m': 1})` calculates the probability of admission ('a') given marks=1.
+   - Similarly, `infer.query(variables=['m'], evidence={'e': 0, 'i': 1})` calculates the probability of marks ('m') given exam=0 and IQ=1.
+
+This code demonstrates the construction of a Bayesian Network, defining CPDs, adding them to the model, performing inference, and querying probabilities. It's a fundamental example of probabilistic graphical models, which are widely used in machine learning and artificial intelligence for modeling uncertainty and making predictions. Let me know if you need further clarification on any part!
 '''
 
 Certainly! Let me explain each line of the code to you:
