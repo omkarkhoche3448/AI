@@ -128,6 +128,7 @@ Sure, let's dive into a detailed explanation of the code:
        - Otherwise, it updates the `current_state` with the next state.
 
 6. Solver Function:
+   -Generalization: By including empty lists, the representation of the state becomes more general and applicable to a wider range of scenarios. It allows the algorithm to handle cases where pegs may start or end up           being empty.
    - This function acts as an entry point for the solver.
    - It doesn't take any parameters.
    - Inside the function, it initializes the initial and goal states and calls the `solution_` function with these states to start the search for a solution.
