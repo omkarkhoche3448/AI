@@ -129,3 +129,64 @@ Certainly! Let's break down the provided code step by step:
    - If no solution is found, it prints "No solution found."
 
 Overall, this code implements the A* search algorithm to solve the missionaries and cannibals problem and provides functions to validate states, generate successor states, calculate heuristic values, and print actions. Let me know if you need further clarification on any part!
+Certainly! Let's delve into each function in more detail:
+
+1. isValid(state):
+   - Purpose: This function checks if a given state is valid according to the problem constraints.
+   - Input: The `state` parameter represents the current state of the problem and is a tuple containing three integers: `(M, C, B)`, where `M` represents the number of missionaries on the left bank, `C` represents the number of cannibals on the left bank, and `B` represents the boat's position (1 for the right bank, 0 for the left bank).
+   - Output: The function returns `True` if the state is valid and `False` otherwise.
+   - Explanation:
+     - It checks if the number of missionaries and cannibals is within the valid range of 0 to 3 (inclusive). If any value is outside this range, the state is invalid.
+     - It ensures that there are no more cannibals than missionaries on either bank. This is to prevent the cannibals from outnumbering the missionaries on any bank, which would lead to the missionaries being eaten.
+     - It also ensures that there are no more cannibals than missionaries on the opposite bank. This constraint prevents a situation where, if there are more cannibals than missionaries on the opposite bank, the missionaries would be outnumbered and eaten if the boat moves to that side without any missionaries present.
+   - Example: If `state = (2, 1, 1)`, representing 2 missionaries, 1 cannibal, and the boat on the right bank, the function would return `True` because this state satisfies all constraints.
+
+2. successors(state):
+   - Purpose: This function generates all possible valid successor states from a given state.
+   - Input: The `state` parameter represents the current state of the problem, similar to the `isValid` function.
+   - Output: It returns a list of tuples, where each tuple represents a valid successor state.
+   - Explanation:
+     - It considers all possible combinations of moving missionaries and cannibals across the river, either one or two at a time.
+     - For each possible move, it first checks if the resulting state would be valid using the `isValid` function.
+     - If the state is valid, it adds it to the list of successor states.
+     - The function generates successor states based on whether the boat is on the left bank or the right bank, as moving missionaries and cannibals requires the boat to be on the same bank.
+   - Example: If `state = (2, 2, 0)`, representing 2 missionaries, 2 cannibals, and the boat on the left bank, the function might return `[(2, 1, 1), (1, 2, 1)]`, indicating two possible moves: moving one cannibal to the right bank or moving one missionary to the right bank.
+
+3. heuristic(state):
+   - Purpose: This function calculates the heuristic value for a given state.
+   - Input: The `state` parameter represents the current state of the problem, similar to the previous functions.
+   - Output: It returns an integer representing the heuristic value for the state.
+   - Explanation:
+     - The heuristic function provides an estimate of how close the current state is to the goal state, guiding the search algorithm towards finding a solution more efficiently.
+     - In this implementation, the heuristic value is calculated by taking the sum of missionaries and cannibals on the left bank and subtracting 2, then dividing the result by 2.
+     - This heuristic value aims to approximate the minimum number of moves required to reach the goal state by estimating the number of moves needed to move all missionaries and cannibals to the right bank.
+   - Example: If `state = (2, 2, 0)`, the function might return `(2 + 2 - 2) // 2 = 1`, indicating that the heuristic value for this state is 1.
+
+4. astar(start_state):
+   - Purpose: This function implements the A* search algorithm to find the optimal solution from the start state to the goal state.
+   - Input: The `start_state` parameter represents the initial state of the problem.
+   - Output: It returns a list of tuples representing the sequence of states from the start state to the goal state (if a solution is found), or `None` if no solution is found.
+   - Explanation:
+     - The A* search algorithm combines the benefits of both Dijkstra's algorithm (which ensures the shortest path) and greedy best-first search (which uses heuristics to guide the search).
+     - It uses a priority queue to explore the most promising paths first, based on the total cost (actual cost + heuristic value) associated with each state.
+     - The function iteratively explores states until it reaches the goal state or exhausts all possible paths.
+     - At each step, it selects the state with the lowest total cost from the priority queue, explores its successors, and updates the priority queue accordingly.
+   - Example: If the solution path is `[(3, 3, 1), (3, 1, 0), ..., (0, 0, 0)]`, representing a sequence of states from the start state to the goal state, the function would return this list.
+
+5. print_actions(path):
+   - Purpose: This function prints the sequence of actions required to reach from the start state to the goal state based on the provided path.
+   - Input: The `path` parameter is a list of tuples representing the sequence of states.
+   - Output: It prints the sequence of actions to the console.
+   - Explanation:
+     - It iterates over the path and calculates the move (difference) between consecutive states.
+     - For each move, it determines whether missionaries or cannibals are being moved and in which direction (left or right bank).
+     - It then prints the corresponding action for each move, such as moving missionaries or cannibals to the left or right bank.
+   - Example: If the path is `[(3, 3, 1), (3, 1, 0), ..., (0, 0, 0)]`, the function might print:
+     ```
+     Move 2 missionaries and 0 cannibals to the left side
+     Move 0 missionaries and 2 cannibals to the right side
+     ...
+     Everyone reached the other side of the bank! :-)
+     ```
+
+These functions collectively solve the missionaries and cannibals problem using the A* search algorithm, ensuring that all generated states adhere to the problem constraints and guiding the search towards finding an optimal solution efficiently. Let me know if you have any further questions!
